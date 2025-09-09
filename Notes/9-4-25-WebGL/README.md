@@ -1,5 +1,5 @@
 ## Computer Graphics Notes
-### 9-4-2025 Title
+### 9-4-2025 WebGL Notes
 
 A lot of graphics boil down to three categories: Objects, Camera, and Light. We have a camera, we have light, we just need to make the objects.
 
