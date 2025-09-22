@@ -3,4 +3,4 @@ Below is a table summarizing each Assignment within this folder. The order is ba
 
 |  #  | Folder        | Description                             |
 | --- | ------------- | --------------------------------------- |
-| A01 | [A01](./A01/) | In progress                             |
+| A01 | [A01](./A01/) | WebGL Intro in Parts                    |
