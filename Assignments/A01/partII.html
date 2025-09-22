@@ -1,0 +1,224 @@
+<!-- 
+ /*****************************************************************************\
+*
+*  Author:           Rykir Evans (See Credits)
+*  Email:            rjevans0408@my.msutexas.edu | rykirjoe@yahoo.com
+*  Title:            Beginner WebGL Program (Part II)
+*  Course:           CMPS 4213 Computer Graphics
+*  Professor:        Dr. Mahmoud Eldefrawy
+*  Semester:         Fall 2025
+*
+*  Description:
+*         This program introuces the concept of WebGL and scene creation
+*         using singular triangles, showcasing different colors and
+*         positioning techniques.
+*         
+*  Usage:
+*         One way to use this program is to download the `partII.html` file
+*         and run locally. Other alternatives are available at your 
+*         discretion.
+*         
+*  Files: 
+*         partII.html
+\******************************************************************************/ 
+-->
+
+<!-- 
+CREDITS:
+The encapsulation of the functions was copied from partIII of this assignment
+for cleaner code
+
+Understanding for incorporating colors into the same verticies array was
+gained via the use of Artificial Intelligence
+-->
+
+<!doctype html>
+<html>
+    <body>
+        <canvas width = "570" height = "570" id = "my_Canvas"></canvas>
+
+        <script>
+            function draw() 
+            {
+                gl.clearColor(0.0, 0.0, 0.0, 0.9);
+                gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+                gl.viewport(0, 0, canvas.width, canvas.height);
+                gl.drawArrays(gl.TRIANGLES, 0, vertices.length / 7);
+            }
+
+
+            // Encapsulated commands for handling the buffe
+            function processBuffer(glBufferType, theBuffer, dataArray)
+            {
+                // Bind appropriate array buffer to it
+                gl.bindBuffer(glBufferType, theBuffer);
+                
+                // Differentiate based on whether it is meant to be a vertex buffer or a index buffer
+                if (glBufferType === gl.ELEMENT_ARRAY_BUFFER) 
+                {gl.bufferData(glBufferType, new Uint16Array(dataArray), gl.STATIC_DRAW);} 
+                else 
+                {gl.bufferData(glBufferType, new Float32Array(dataArray), gl.STATIC_DRAW);}
+
+                // Unbind the buffer
+                gl.bindBuffer(glBufferType, null);
+            }
+
+            // Encapsulated commands for making a shader
+            function makeShader(shaderType, code)
+            {
+                var returnMe = gl.createShader(shaderType);
+
+                // Attach vertex shader source code
+                gl.shaderSource(returnMe, code);
+
+                // Compile the vertex shader
+                gl.compileShader(returnMe);
+
+                return returnMe;
+            }
+
+            // Encapsulated commands for making a shader program
+            function makeShaderProgram(shaderArray)
+            {
+                var returnMe = gl.createProgram();
+
+                // Attach a vertex shader
+                gl.attachShader(returnMe, shaderArray[0]);
+
+                // Attach a fragment shader
+                gl.attachShader(returnMe, shaderArray[1]);
+
+                // Link both the programs
+                gl.linkProgram(returnMe);
+
+                // Use the combined shader program object
+                gl.useProgram(returnMe);
+
+                return returnMe;
+            }
+
+            /*============== Creating a canvas ====================*/
+            var canvas = document.getElementById('my_Canvas');
+            const gl = canvas.getContext('webgl');
+
+            // Simple Sierpinski Triangle
+            const vertices = 
+            [
+                // Triangles with RGB Gradient vertices (Top 3)
+                0.0, 0.0, 0.0,      1.0, 0.0, 0.0, 1.0,
+                -.2, 0.30, 0.0,     0.0, 1.0, 0.0, 1.0,
+                -0.4, 0.0, 0.0,     0.0, 0.0, 1.0, 1.0,
+
+                0.0, 0.0, 0.0,      1.0, 0.0, 0.0, 1.0,
+                .2, 0.30, 0.0,     0.0, 1.0, 0.0, 1.0,
+                0.4, 0.0, 0.0,     0.0, 0.0, 1.0, 1.0,
+
+                -0.2, 0.3, 0.0,      1.0, 0.0, 0.0, 1.0,
+                0.0, 0.6, 0.0,     0.0, 1.0, 0.0, 1.0,
+                0.2, 0.3, 0.0,     0.0, 0.0, 1.0, 1.0,
+
+                // Triangles with separate RGB Colors
+                0.4, -0.6, 0.0,      1.0, 0.0, 0.0, 1.0, // Red triangle
+                0.2, -0.3, 0.0,     1.0, 0.0, 0.0, 1.0,
+                0.0, -0.6, 0.0,     1.0, 0.0, 0.0, 1.0,
+
+                0.4, -0.6, 0.0,      0.0, 1.0, 0.0, 1.0, // Green Triangle
+                0.6, -0.3, 0.0,     0.0, 1.0, 0.0, 1.0,
+                0.8, -0.6, 0.0,     0.0, 1.0, 0.0, 1.0,
+
+                0.2, -0.3, 0.0,      0.0, 0.0, 1.0, 1.0, // Blue Triangle
+                0.4, 0.0, 0.0,     0.0, 0.0, 1.0, 1.0,
+                0.6, -0.3, 0.0,     0.0, 0.0, 1.0, 1.0,
+
+                // Triangles with separate CYM Colors
+                -0.4, -0.6, 0.0,      1.0, 1.0, 0.0, 1.0, // Red triangle
+                -0.6, -0.3, 0.0,     1.0, 1.0, 0.0, 1.0,
+                -0.8, -0.6, 0.0,     1.0, 1.0, 0.0, 1.0,
+
+                -0.4, -0.6, 0.0,      0.0, 1.0, 1.0, 1.0, // Green Triangle
+                -0.2, -0.3, 0.0,     0.0, 1.0, 1.0, 1.0,
+                0.0, -0.6, 0.0,     0.0, 1.0, 1.0, 1.0,
+
+                -0.6, -0.3, 0.0,      1.0, 0.0, 1.0, 1.0, // Blue Triangle
+                -0.4, 0.0, 0.0,     1.0, 0.0, 1.0, 1.0,
+                -0.2, -0.3, 0.0,     1.0, 0.0, 1.0, 1.0,
+            ];
+
+
+      
+         
+            // Create empty buffer objects to store vertex & index buffers
+            var vertex_buffer = gl.createBuffer();
+
+            // Bind buffers and send data
+            processBuffer(gl.ARRAY_BUFFER, vertex_buffer, vertices);
+            // processBuffer(gl.ELEMENT_ARRAY_BUFFER, Index_Buffer, indices);
+
+            /*================ Shaders ====================*/
+            
+            // Vertex shader source code
+            var vertCode = `
+                attribute vec3 coordinates;
+                attribute vec4 vertexColor;
+                varying vec4 fragColor;
+
+                void main(void) {
+                gl_Position = vec4(coordinates, 1.0);
+                fragColor = vertexColor;
+                }
+            `;
+
+
+            //fragment shader source code
+            var fragCode = `
+                precision mediump float;
+                varying vec4 fragColor;
+
+                void main(void) {
+                gl_FragColor = fragColor;
+                }
+            `;
+
+                
+            // Create a vertex and fragment shader objects
+            var vertShader = makeShader(gl.VERTEX_SHADER, vertCode);
+            var fragShader = makeShader(gl.FRAGMENT_SHADER, fragCode);
+
+            // Create a shader program object to store
+            // the combined shader program
+            var shaderProgram = makeShaderProgram([vertShader, fragShader]);
+
+
+
+            /*======= Associating shaders to buffer objects =======*/
+
+            var FSIZE = Float32Array.BYTES_PER_ELEMENT; // 4
+            var stride = 7 * FSIZE;
+
+            // Bind vertex buffer object
+            gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
+            // gl.bindBuffer(gl.ARRAY_BUFFER, brick_buffer);
+
+            // Bind index buffer object
+            // gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, Index_Buffer);
+            
+            // Get the attribute location
+            var coord = gl.getAttribLocation(shaderProgram, "coordinates");
+
+            // Point an attribute to the currently bound VBO
+            gl.vertexAttribPointer(coord, 3, gl.FLOAT, false, stride, 0); 
+            
+            // Enable the attribute
+            gl.enableVertexAttribArray(coord);
+
+            // Same steps for the color vector
+            var color = gl.getAttribLocation(shaderProgram, "vertexColor");
+            gl.vertexAttribPointer(color, 4, gl.FLOAT, false, stride, 3 * FSIZE);
+            gl.enableVertexAttribArray(color);
+
+            /*=========Drawing the triangle===========*/
+            draw();
+        </script>
+
+    </body>
+</html>
