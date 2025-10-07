@@ -24,7 +24,7 @@ Vectors are a collection of numbers which naturally posess a magnitude and a dir
 
 Some common examples are force, velocity, and directed line segments.
 
-In dimension n, a vector can be defined as an order n-tuple: Since it's easier to type and not confusing with arrays, I will be using row vector notation for my nots: `<n1, n2, n3>`
+In dimension n, a vector can be defined as an order n-tuple: Since it's easier to type and not confusing with arrays, I will be using row vector notation for my notes: `<n1, n2, n3>`
 
 We covered how to find the magnitude of the vectors, which is just the square root of the sum of the squares of the components.
 
